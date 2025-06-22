@@ -30,7 +30,7 @@ public class Application {
         log.info("----------------------------------------------------------");
         log.info("服务端 '{}' 启动完成!", env.getProperty("spring.application.name"));
         log.info("环境(s): {}", (Object) env.getActiveProfiles());
-        log.info("日志级别: {}", env.getProperty("logging.level.com.airedgesoft.ae.*"));
+        log.info("日志级别: {}", env.getProperty("logging.level.com.cjc.nimbus.*"));
         log.info("----------------------------------------------------------");
     }
 

@@ -1,14 +1,14 @@
 server:
-  port: 8088
+  port: 7079
   ip: localhost
   servlet:
-    context-path: /plm
+    context-path: /nimbus
   http2:
     enabled: true
 
 spring:
   application:
-    name: airedge-backend-2.1
+    name: nimbus-service
   profiles:
     active: @profiles.active@
   messages:
@@ -22,7 +22,7 @@ spring:
   config:
     import: classpath:swagger.yml
   quartz:
-    auto-startup: true
+    auto-startup: false
     job-store-type: jdbc
     jdbc:
       initialize-schema: never
@@ -30,12 +30,12 @@ spring:
       org:
         quartz:
           scheduler:
-            instanceName: airedge-service-scheduler
+            instanceName: nimbus-service-scheduler
             instanceId: AUTO
           threadPool:
             threadCount: 50
             threadPriority: 5
-            threadNamePrefix: airedge-service-scheduler-thread-pool
+            threadNamePrefix: nimbus-service-scheduler-thread-pool
           jobStore:
             isClustered: true
             tablePrefix: qrtz_
@@ -55,7 +55,7 @@ thread-pool:
 #mybatis plus 设置
 mybatis-plus:
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.airedgesoft.plm.sdkimpl.*.*.po
+  typeAliasesPackage: com.cjc.nimbus.sdkimpl.*.*.po
   global-config:
     # 关闭MP3.0自带的banner
     banner: false
@@ -83,7 +83,7 @@ knife4j:
 
 logging:
   level:
-    com.airedgesoft.*: info
+    com.cjc.nimbus.*: info
     org.quartz: INFO
   file:
     path: logs

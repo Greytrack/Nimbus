@@ -1,10 +1,10 @@
 spring:
   data:
     redis:
-      host: 192.168.11.236
+      host: localhost
       port: 6379
-      database: 0
-      password: air541018
+      database: 5
+      #      password: air541018
       client-type: lettuce
       timeout: 5000
       lettuce:
@@ -19,9 +19,9 @@ spring:
   #开发库
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:p6spy:postgresql://192.168.11.236:5432/airedge2.1db?rewriteBatchedStatements=true
-    username: airedge
-    password: air20220401
+    url: jdbc:p6spy:postgresql://127.0.0.1:5432/postgres?rewriteBatchedStatements=true
+    username: postgres
+    password: 123qweasd
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     hikari:
       #最大连接数
