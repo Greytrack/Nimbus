@@ -40,6 +40,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-core</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -73,21 +78,6 @@
                 <profiles.active>dev</profiles.active>
             </properties>
         </profile>
-
-        <profile>
-            <id>prod</id>
-            <properties>
-                <profiles.active>prod</profiles.active>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>pre</id>
-            <properties>
-                <profiles.active>pre</profiles.active>
-            </properties>
-        </profile>
-
         <profile>
             <id>local</id>
             <properties>
@@ -95,53 +85,9 @@
             </properties>
         </profile>
         <profile>
-            <id>jkDev</id>
-            <properties>
-                <profiles.active>jkDev</profiles.active>
-            </properties>
-        </profile>
-        <profile>
-            <id>localcjc</id>
-            <properties>
-                <profiles.active>localcjc</profiles.active>
-            </properties>
-        </profile>
-        <profile>
-            <id>localzxm</id>
-            <properties>
-                <profiles.active>localzxm</profiles.active>
-            </properties>
-        </profile>
-        <profile>
-            <id>syDev</id>
-            <properties>
-                <profiles.active>syDev</profiles.active>
-            </properties>
-        </profile>
-        <profile>
-            <id>qm</id>
-            <properties>
-                <profiles.active>qm</profiles.active>
-            </properties>
-        </profile>
-        <profile>
-            <id>wlc</id>
-            <properties>
-                <profiles.active>wlc</profiles.active>
-            </properties>
-        </profile>
-
-
-        <profile>
             <id>test</id>
             <properties>
                 <profiles.active>test</profiles.active>
-            </properties>
-        </profile>
-        <profile>
-            <id>zzg</id>
-            <properties>
-                <profiles.active>localzzg</profiles.active>
             </properties>
         </profile>
     </profiles>
@@ -203,13 +149,6 @@
                         </exclude>
                     </excludes>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

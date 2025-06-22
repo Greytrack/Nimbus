@@ -23,6 +23,9 @@
         <maven.compiler.target>17</maven.compiler.target>
         <lombok.version>1.18.32</lombok.version>
         <springdoc.version>1.7.0</springdoc.version>
+        <spring.context.version>6.2.8</spring.context.version>
+        <spring.web.version>6.2.8</spring.web.version>
+        <spring.webmvc.version>6.1.14</spring.webmvc.version>
         <knife4j.version>4.5.0</knife4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.13.0</jackson.version>
@@ -48,7 +51,7 @@
         <lexorank4j.version>0.1.0</lexorank4j.version>
         <ip2region.version>2.7.0</ip2region.version>
         <javax.mail.version>1.6.2</javax.mail.version>
-        <guava.version>27.0.1-jre</guava.version>
+        <guava.version>32.0.1-android</guava.version>
         <junit-jupiter.version>5.10.0</junit-jupiter.version>
         <commons-text.version>1.12.0</commons-text.version>
         <jacoco.version>0.8.11</jacoco.version>
@@ -188,50 +191,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
         </plugins>
-        <!-- 资源与仓库配置保持不变 -->
     </build>
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>AirRndPublic</id>-->
-<!--            <name>AirRndPublic Repository</name>-->
-<!--            <url>https://nexus.public.airedgesoft.com/repository/induslab-public-maven/</url>-->
-<!--            <releases>-->
-<!--                <enabled>true</enabled>-->
-<!--                <updatePolicy>always</updatePolicy>-->
-<!--            </releases>-->
-<!--            <snapshots>-->
-<!--                <enabled>true</enabled>-->
-<!--                <updatePolicy>always</updatePolicy>-->
-<!--            </snapshots>-->
-<!--        </repository>-->
-<!--    </repositories>-->
-<!--    <pluginRepositories>-->
-<!--        <pluginRepository>-->
-<!--            <id>AirRndPluginPublic</id>-->
-<!--            <name>AirRndPluginPublic PluginRepository</name>-->
-<!--            <url>https://nexus.public.airedgesoft.com/repository/induslab-public-maven/</url>-->
-<!--            <releases>-->
-<!--                <enabled>true</enabled>-->
-<!--            </releases>-->
-<!--            <snapshots>-->
-<!--                <enabled>true</enabled>-->
-<!--                <updatePolicy>always</updatePolicy>-->
-<!--            </snapshots>-->
-<!--        </pluginRepository>-->
-<!--    </pluginRepositories>-->
-<!--    <distributionManagement>-->
-<!--        <repository>-->
-<!--            <id>releases</id>-->
-<!--            <name>IndusLab Release Repository</name>-->
-<!--            <url>https://nexus.public.airedgesoft.com/repository/induslab-releases-maven/</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>snapshots</id>-->
-<!--            <name>IndusLab Snapshots Repository</name>-->
-<!--            <url>https://nexus.public.airedgesoft.com/repository/induslab-snapshots-maven/</url>-->
-<!--        </snapshotRepository>-->
-<!--    </distributionManagement>-->
-
 </project>
