@@ -1,0 +1,2 @@
+org.springframework.modulith.core.ApplicationModuleDetectionStrategy=\
+  com.airedgesoft.plm.infrastructure.core.modulith.AirEdgeApplicationModuleDetectionStrategy

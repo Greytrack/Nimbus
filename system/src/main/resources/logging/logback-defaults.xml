@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="LOG_FILE"
+              value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-${logging_file_path}}}}/spring.log}"/>
+    <property name="LOG_HOME" value="${LOG_PATH:-${logging_file_path}}"/>
+    <!-- 配置当前日期的timestamp -->
+    <timestamp key="CURRENT_DATE" datePattern="yyyy-MM-dd"/>
+    <jmxConfigurator/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+    <include resource="logback-pattern.xml"/>
+
+    <!--定义日志文件大小 超过这个大小会压缩归档 -->
+    <property name="DEBUG_MAX_FILE_SIZE" value="100MB"/>
+    <property name="INFO_MAX_FILE_SIZE" value="100MB"/>
+    <property name="ERROR_MAX_FILE_SIZE" value="100MB"/>
+    <property name="TRACE_MAX_FILE_SIZE" value="100MB"/>
+    <property name="WARN_MAX_FILE_SIZE" value="100MB"/>
+
+    <!--定义日志文件最长保存时间 -->
+    <property name="DEBUG_MAX_HISTORY" value="180"/>
+    <property name="INFO_MAX_HISTORY" value="180"/>
+    <property name="ERROR_MAX_HISTORY" value="180"/>
+    <property name="TRACE_MAX_HISTORY" value="180"/>
+    <property name="WARN_MAX_HISTORY" value="180"/>
+
+    <!--定义归档日志文件最大保存大小，当所有归档日志大小超出定义时，会触发删除  -->
+    <property name="DEBUG_TOTAL_SIZE_CAP" value="5GB"/>
+    <property name="INFO_TOTAL_SIZE_CAP" value="5GB"/>
+    <property name="ERROR_TOTAL_SIZE_CAP" value="5GB"/>
+    <property name="TRACE_TOTAL_SIZE_CAP" value="5GB"/>
+    <property name="WARN_TOTAL_SIZE_CAP" value="5GB"/>
+    <!--控制台输出appender-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--设置输出格式-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <!--设置编码-->
+            <charset>UTF-8</charset>
+        </encoder>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!--文件日志， 按照每天生成日志文件 -->
+    <appender name="timeFileOutput" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志名,指定最新的文件名，其他文件名使用FileNamePattern -->
+        <File>${LOG_HOME}/out.log</File>
+        <!--文件滚动模式-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名,可设置文件类型为gz,开启文件压缩-->
+            <FileNamePattern>${LOG_HOME}/out.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>180</MaxHistory>
+            <!--按大小分割同一天的-->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <!--输出格式-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <!--设置编码-->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--  国际化 start  -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="I18N_DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/debug/${CURRENT_DATE}/i18n_debug.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/${CURRENT_DATE}/debug/i18n_debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${DEBUG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${DEBUG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${DEBUG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="I18N_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/info/${CURRENT_DATE}/i18n_info.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/${CURRENT_DATE}/info/i18n_info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${INFO_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${INFO_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${INFO_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="I18N_WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/warn/${CURRENT_DATE}/i18n_warn.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/warn/${CURRENT_DATE}/i18n_warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${WARN_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${WARN_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="I18N_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/error/${CURRENT_DATE}/i18n_error.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/error/${CURRENT_DATE}/i18n_error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${ERROR_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${ERROR_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="I18N" level="INFO">
+        <appender-ref ref="I18N_INFO_FILE"/>
+    </logger>
+    <logger name="I18N" level="WARN">
+        <appender-ref ref="I18N_WARN_FILE"/>
+    </logger>
+    <logger name="I18N" level="ERROR">
+        <appender-ref ref="I18N_ERROR_FILE"/>
+    </logger>
+    <logger name="I18N" level="DEBUG">
+        <appender-ref ref="I18N_DEBUG_FILE"/>
+    </logger>
+
+    <!--  国际化 end  -->
+
+
+    <!--  编号设置 start  -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="NUMBER_SETTING_DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/debug/${CURRENT_DATE}/numbersetting_debug.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/debug/${CURRENT_DATE}/numbersetting.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${DEBUG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${DEBUG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${DEBUG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="NUMBER_SETTING_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/info/${CURRENT_DATE}/numbersetting_info.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/info/${CURRENT_DATE}/numbersetting_info.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${INFO_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${INFO_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${INFO_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="NUMBER_SETTING_WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/warn/${CURRENT_DATE}/numbersetting_warn.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/warn/${CURRENT_DATE}/numbersetting_warn.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${WARN_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${WARN_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="NUMBER_SETTING_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/error/${CURRENT_DATE}/numbersetting_error.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/error/${CURRENT_DATE}/numbersetting_error.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${ERROR_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${ERROR_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="NUMBER_SETTING" level="INFO">
+        <appender-ref ref="NUMBER_SETTING_INFO_FILE"/>
+    </logger>
+    <logger name="NUMBER_SETTING" level="WARN">
+        <appender-ref ref="NUMBER_SETTING_WARN_FILE"/>
+    </logger>
+    <logger name="NUMBER_SETTING" level="ERROR">
+        <appender-ref ref="NUMBER_SETTING_ERROR_FILE"/>
+    </logger>
+    <logger name="NUMBER_SETTING" level="DEBUG">
+        <appender-ref ref="NUMBER_SETTING_DEBUG_FILE"/>
+    </logger>
+
+    <!-- 编号设置 end  -->
+
+    <!--  基础设置 start  -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="BASIC_SETTING_DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/debug/${CURRENT_DATE}/basicsetting_debug.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/debug/${CURRENT_DATE}/basicsetting.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${DEBUG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${DEBUG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${DEBUG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="BASIC_SETTING_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/info/${CURRENT_DATE}/basicsetting_info.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/info/${CURRENT_DATE}/basicsetting_info.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${INFO_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${INFO_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${INFO_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="BASIC_SETTING_WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/warn/${CURRENT_DATE}/basicsetting_warn.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/warn/${CURRENT_DATE}/basicsetting_warn.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${WARN_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${WARN_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="BASIC_SETTING_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/error/${CURRENT_DATE}/basicsetting_error.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/error/${CURRENT_DATE}/basicsetting_error.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${ERROR_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${ERROR_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="BASIC_SETTING" level="INFO">
+        <appender-ref ref="BASIC_SETTING_INFO_FILE"/>
+    </logger>
+    <logger name="BASIC_SETTING" level="WARN">
+        <appender-ref ref="BASIC_SETTING_WARN_FILE"/>
+    </logger>
+    <logger name="BASIC_SETTING" level="ERROR">
+        <appender-ref ref="BASIC_SETTING_ERROR_FILE"/>
+    </logger>
+    <logger name="BASIC_SETTING" level="DEBUG">
+        <appender-ref ref="BASIC_SETTING_DEBUG_FILE"/>
+    </logger>
+
+    <!-- 基础设置 end  -->
+
+
+    <!--  BOM start  -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="BOM_MANAGEMENT_DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/debug/${CURRENT_DATE}/bom_debug.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/debug/${CURRENT_DATE}/bom.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${DEBUG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${DEBUG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${DEBUG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="BOM_MANAGEMENT_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/info/${CURRENT_DATE}/bom_info.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/info/${CURRENT_DATE}/bom_info.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${INFO_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${INFO_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${INFO_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="BOM_MANAGEMENT_WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/warn/${CURRENT_DATE}/bom_warn.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/warn/${CURRENT_DATE}/bom_warn.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${WARN_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${WARN_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="BOM_MANAGEMENT_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/error/${CURRENT_DATE}/bom_error.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/error/${CURRENT_DATE}/bom_error.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${ERROR_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${ERROR_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="BOM_MANAGEMENT" level="INFO">
+        <appender-ref ref="BOM_MANAGEMENT_INFO_FILE"/>
+    </logger>
+    <logger name="BOM_MANAGEMENT" level="WARN">
+        <appender-ref ref="BOM_MANAGEMENT_WARN_FILE"/>
+    </logger>
+    <logger name="BOM_MANAGEMENT" level="ERROR">
+        <appender-ref ref="BOM_MANAGEMENT_ERROR_FILE"/>
+    </logger>
+    <logger name="BOM_MANAGEMENT" level="DEBUG">
+        <appender-ref ref="BOM_MANAGEMENT_DEBUG_FILE"/>
+    </logger>
+
+    <!-- 基础设置 end  -->
+
+
+    <!--  系统权限 start  -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="OAUTH_DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/debug/${CURRENT_DATE}/oauth_debug.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/debug/${CURRENT_DATE}/oauth_debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${DEBUG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${DEBUG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${DEBUG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="OAUTH_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/info/${CURRENT_DATE}/oauth_info.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/info/${CURRENT_DATE}/oauth_info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${INFO_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${INFO_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${INFO_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="OAUTH_WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/warn/${CURRENT_DATE}/oauth_warn.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/warn/${CURRENT_DATE}/oauth_warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${WARN_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${WARN_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="OAUTH_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/error/${CURRENT_DATE}/oauth_error.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/error/${CURRENT_DATE}/oauth_error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${ERROR_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${ERROR_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="OAUTH" level="INFO">
+        <appender-ref ref="OAUTH_INFO_FILE"/>
+    </logger>
+    <logger name="OAUTH" level="WARN">
+        <appender-ref ref="OAUTH_WARN_FILE"/>
+    </logger>
+    <logger name="OAUTH" level="ERROR">
+        <appender-ref ref="OAUTH_ERROR_FILE"/>
+    </logger>
+    <logger name="OAUTH" level="DEBUG">
+        <appender-ref ref="OAUTH_DEBUG_FILE"/>
+    </logger>
+
+    <!-- 系统权限 end  -->
+
+    <!--  基础设置模块 start  -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="INFRASTRUCTURE_DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/debug/${CURRENT_DATE}/infrastructure_debug.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/debug/${CURRENT_DATE}/infrastructure_debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${DEBUG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${DEBUG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${DEBUG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="INFRASTRUCTURE_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/info/${CURRENT_DATE}/infrastructure_info.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/info/${CURRENT_DATE}/infrastructure_info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${INFO_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${INFO_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${INFO_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="INFRASTRUCTURE_WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/warn/${CURRENT_DATE}/infrastructure_warn.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/warn/${CURRENT_DATE}/infrastructure_warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${WARN_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${WARN_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="INFRASTRUCTURE_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/error/${CURRENT_DATE}/infrastructure_error.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/error/${CURRENT_DATE}/infrastructure_error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${ERROR_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${ERROR_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="INFRASTRUCTURE" level="INFO">
+        <appender-ref ref="INFRASTRUCTURE_INFO_FILE"/>
+    </logger>
+    <logger name="INFRASTRUCTURE" level="WARN">
+        <appender-ref ref="INFRASTRUCTURE_WARN_FILE"/>
+    </logger>
+    <logger name="INFRASTRUCTURE" level="ERROR">
+        <appender-ref ref="INFRASTRUCTURE_ERROR_FILE"/>
+    </logger>
+    <logger name="INFRASTRUCTURE" level="DEBUG">
+        <appender-ref ref="INFRASTRUCTURE_DEBUG_FILE"/>
+    </logger>
+
+    <!-- 基础设置模块 end  -->
+
+
+    <!--  系统日志模块 start  -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="SYSLOG_DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/debug/${CURRENT_DATE}/SYSLOG_debug.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/debug/${CURRENT_DATE}/syslog_debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${DEBUG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${DEBUG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${DEBUG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="SYSLOG_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/info/${CURRENT_DATE}/syslog_info.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/info/${CURRENT_DATE}/syslog_info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${INFO_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${INFO_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${INFO_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="SYSLOG_WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/warn/${CURRENT_DATE}/SYSLOG_warn.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/warn/${CURRENT_DATE}/syslog_warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${WARN_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${WARN_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="SYSLOG_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/error/${CURRENT_DATE}/SYSLOG_error.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/error/${CURRENT_DATE}/syslog_error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${ERROR_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${ERROR_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="SYSLOG" level="INFO">
+        <appender-ref ref="SYSLOG_INFO_FILE"/>
+    </logger>
+    <logger name="SYSLOG" level="WARN">
+        <appender-ref ref="SYSLOG_WARN_FILE"/>
+    </logger>
+    <logger name="SYSLOG" level="ERROR">
+        <appender-ref ref="SYSLOG_ERROR_FILE"/>
+    </logger>
+    <logger name="SYSLOG" level="DEBUG">
+        <appender-ref ref="SYSLOG_DEBUG_FILE"/>
+    </logger>
+
+    <!-- 系统日志模块 end  -->
+
+
+    <!--  工作流日志模块 start  -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="WORKFLOW_DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/debug/${CURRENT_DATE}/workflow_debug.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/debug/${CURRENT_DATE}/workflow_debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${DEBUG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${DEBUG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${DEBUG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="WORKFLOW_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/info/${CURRENT_DATE}/workflow_info.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/info/${CURRENT_DATE}/workflow_info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${INFO_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${INFO_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${INFO_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="WORKFLOW_WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/warn/${CURRENT_DATE}/workflow_warn.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/warn/${CURRENT_DATE}/workflow_warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${WARN_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${WARN_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="WORKFLOW_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/error/${CURRENT_DATE}/workflow_error.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/error/${CURRENT_DATE}/workflow_error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${ERROR_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${ERROR_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="WORKFLOW" level="INFO">
+        <appender-ref ref="WORKFLOW_INFO_FILE"/>
+    </logger>
+    <logger name="WORKFLOW" level="WARN">
+        <appender-ref ref="WORKFLOW_WARN_FILE"/>
+    </logger>
+    <logger name="WORKFLOW" level="ERROR">
+        <appender-ref ref="WORKFLOW_ERROR_FILE"/>
+    </logger>
+    <logger name="WORKFLOW" level="DEBUG">
+        <appender-ref ref="WORKFLOW_DEBUG_FILE"/>
+    </logger>
+
+    <!-- 工作流日志模块 end  -->
+
+
+    <!--  附件日志模块 start  -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="ATTACHMENT_DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/debug/${CURRENT_DATE}/attachment_debug.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/debug/${CURRENT_DATE}/attachment_debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${DEBUG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${DEBUG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${DEBUG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="ATTACHMENT_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/info/${CURRENT_DATE}/attachment_info.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/info/${CURRENT_DATE}/attachment_info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${INFO_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${INFO_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${INFO_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="ATTACHMENT_WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/warn/${CURRENT_DATE}/attachment_warn.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/warn/${CURRENT_DATE}/attachment_warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${WARN_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${WARN_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${WARN_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="ATTACHMENT_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 当前Log文件名 -->
+        <file>${LOG_HOME}/error/${CURRENT_DATE}/attachment_error.log</file>
+        <!-- 压缩备份设置 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/backup/error/${CURRENT_DATE}/attachment_error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${ERROR_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${ERROR_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${ERROR_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="ATTACHMENT" level="INFO">
+        <appender-ref ref="ATTACHMENT_INFO_FILE"/>
+    </logger>
+    <logger name="ATTACHMENT" level="WARN">
+        <appender-ref ref="ATTACHMENT_WARN_FILE"/>
+    </logger>
+    <logger name="ATTACHMENT" level="ERROR">
+        <appender-ref ref="ATTACHMENT_ERROR_FILE"/>
+    </logger>
+    <logger name="ATTACHMENT" level="DEBUG">
+        <appender-ref ref="ATTACHMENT_DEBUG_FILE"/>
+    </logger>
+
+    <!-- 附件日志模块 end  -->
+
+
+    <!-- /temp/日志级别/日期/模块.log-->
+
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="timeFileOutput"/>
+    </root>
+
+</included>
